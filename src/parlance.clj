@@ -86,7 +86,7 @@
 
 
 (defn one-or-more [p]
-  "Gather all parsing results of repeatedly applying parser p.  p must succeed
+  "Gather all parsing results of repeatedly invoking parser p.  p must succeed
   at least once, otherwise fail."
   (and-then p (zero-or-more p)))
 
