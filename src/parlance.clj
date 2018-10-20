@@ -100,7 +100,7 @@
 
 
 (defn char [c]
-  "Parse the caracter c."
+  "Parse the character c."
   (fn [s]
     (if (= c (first s))
       [[(str c)] (rest s)]
