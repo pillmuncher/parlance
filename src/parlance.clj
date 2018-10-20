@@ -21,7 +21,7 @@
     [[] s])
 
 
-(defn epsilon [s]
+(defn eoi [s]
   "Recognize the end of the input string."
   (if (empty? s)
     [[] ""]
