@@ -36,14 +36,14 @@
 
 
 (defn ignore [p]
-  "Apply parser p but ignore its parsig result."
+  "Invoke parser p but ignore its parsig result."
   (fn [s]
     (let [[r s1] (p s)]
       [[] s1])))
 
 
 (defn and-then[p1 p2]
-  "Apply parsers p1 and p2 in sequence.  p2 starts off where p1 stopped."
+  "Invoke parsers p1 and p2 in sequence.  p2 starts off where p1 stopped."
   (fn [s]
     (let [[r1 s1] (p1 s)
           [r2 s2] (p2 s1)]
@@ -51,7 +51,7 @@
 
 
 (defn or-else[p1 p2]
-  "Apply parsers p1 and p2 alternatively.  If p1 fails, apply p2 instead from
+  "Invoke parsers p1 and p2 alternatively.  If p1 fails, apply p2 instead from
    the same point in input."
   (fn [s]
     (try
@@ -61,13 +61,13 @@
 
 
 (defn chain [px py & ps]
-  "Apply parsers p...  in sequence.  Each one starts off where the previous
+  "Invoke parsers p...  in sequence.  Each one starts off where the previous
    one stopped."
   (reduce and-then (and-then px py) ps))
 
 
 (defn alt [px py & ps]
-  "Apply parsers p...  alternatively from the same point in input, until one
+  "Invoke parsers p...  alternatively from the same point in input, until one
   returns a parsing result.  This becomes the alt parsers result."
   (reduce or-else (or-else px py) ps))
 
@@ -92,7 +92,7 @@
 
 
 (defn zero-or-one [p]
-  "Apply parser p, but ignore failure."
+  "Invoke parser p, but ignore failure."
   (or-else p empty))
 
 
