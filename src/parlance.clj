@@ -74,7 +74,7 @@
 
 (defn zero-or-more [p]
   "Gather all parsing results of repeatedly applying parser p while consuming
-   input.  If p never succeeds, don't fail but return an empty parsing result."
+   input.  If p never succeeds return an empty parsing result."
   (defn helper [acc s]
     (try
       (let [[acc1 s1] (p s)]
@@ -132,4 +132,3 @@
 
 (n-blocks "5hallo7ingbertrest")
 ;;  Ergebnis:  [["hallo" "ingbert"] (\r \e \s \t)]
-
