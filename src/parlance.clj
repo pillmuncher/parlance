@@ -36,7 +36,7 @@
 
 
 (defn ignore [p]
-  "Invoke parser p but ignore its parsig result."
+  "Invoke parser p but ignore its parsing result."
   (fn [s]
     (let [[r s1] (p s)]
       [[] s1])))
@@ -67,7 +67,7 @@
 
 
 (defn alt [px py & ps]
-  "Invoke parsers p...  alternatively from the same point in input, until one
+  "Invoke parsers p...  alternatively at the same point in input, until one
   returns a parsing result.  This becomes the alt parsers result."
   (reduce or-else (or-else px py) ps))
 
@@ -120,8 +120,8 @@
 
 
 (defn pop-chars [n]
-  "Read the next n character tring and return it as parsing result.  Advance
-   input by n characters."
+  "Read the next n characters and return them as parsing result, joined into
+  a single string."
   (fn [s]
     [[(apply str (take n s))] (drop n s)]))
 
