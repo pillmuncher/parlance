@@ -9,7 +9,7 @@
 
 (defn bind [p f]
   "Determine the parser to be used next by calling function f on the parsing
-  result of parser p (i.e.  f must return a parser)."
+  result of parser p (i.e. f must return a parser)."
   (fn [s]
     (let [[r1 s1] (p s)
           p1 (apply f r1)]
