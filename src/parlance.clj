@@ -2,14 +2,14 @@
 
 
 (defn return [v]
-  "Make value v the parsing result.  Don't consume any input."
+  "Make value v the result.  Don't consume any input."
   (fn [s]
     [[v] s]))
 
 
 (defn bind [p f]
-  "Determine the parser to be invoked next by calling function f on the
-   parsing result of parser p (i.e. f must return a parser)."
+  "Determine the parser to be invoked next by calling function f on the result
+  of parser p (i.e. f must return a parser)."
   (fn [s]
     (let [[r1 s1] (p s)
           p1 (apply f r1)]
@@ -29,14 +29,14 @@
 
 
 (defn action [f p]
-  "Transform the parsing result of parser p by applying function f."
+  "Transform the result of parser p by applying function f."
   (fn [s]
     (let [[r s1] (p s)]
       [[(apply f r)] s1])))
 
 
 (defn ignore [p]
-  "Invoke parser p but ignore its parsing result."
+  "Invoke parser p but ignore its result."
   (fn [s]
     (let [[r s1] (p s)]
       [[] s1])))
@@ -52,7 +52,7 @@
 
 (defn or-else [p1 p2]
   "Invoke parsers p1 and p2 alternatively.  If p1 fails, invoke p2 instead at
-   the same point in input."
+  the same point in input."
   (fn [s]
     (try
       (p1 s)
@@ -62,19 +62,19 @@
 
 (defn chain [px py & ps]
   "Invoke parsers p...  in sequence.  Each one starts off where the previous
-   one stopped."
+  one stopped."
   (reduce and-then (and-then px py) ps))
 
 
 (defn alt [px py & ps]
   "Invoke parsers p...  alternatively at the same point in input, until one
-  returns a parsing result.  This becomes the alt parsers result."
+  returns a result.  This becomes the alt parsers result."
   (reduce or-else (or-else px py) ps))
 
 
 (defn zero-or-more [p]
-  "Gather all parsing results of repeatedly invoking parser p while consuming
-   input.  If p never succeeds return an empty parsing result."
+  "Invoke parser p repeatedly until failure. Collect and return all results.
+  If p never succeeds, return an empty result."
   (defn helper [acc s]
     (try
       (let [[acc1 s1] (p s)]
@@ -86,13 +86,13 @@
 
 
 (defn one-or-more [p]
-  "Gather all parsing results of repeatedly invoking parser p.  p must succeed
-  at least once, otherwise fail."
+  "Invoke parser p repeatedly until failure. Collect and return all results.
+  If p never succeeds, fail."
   (and-then p (zero-or-more p)))
 
 
 (defn zero-or-one [p]
-  "Invoke parser p, but ignore failure."
+  "Invoke parser p once, but ignore failure."
   (or-else p empty))
 
 
@@ -120,8 +120,8 @@
 
 
 (defn pop-chars [n]
-  "Read the next n characters and return them as parsing result, joined into
-  a single string."
+  "Read the next n characters and return them as result, joined into a single
+  string."
   (fn [s]
     [[(apply str (take n s))] (drop n s)]))
 
