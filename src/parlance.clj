@@ -91,12 +91,12 @@
   (and-then p (zero-or-more p)))
 
 
-(defn zero-or-once [p]
+(defn zero-or-one [p]
   "Apply parser p, but ignore failure."
   (or-else p empty))
 
 
-(def opt zero-or-once)
+(def opt zero-or-one)
 
 
 (defn char [c]
