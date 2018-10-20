@@ -75,14 +75,15 @@
 (defn zero-or-more [p]
   "Invoke parser p repeatedly until failure. Collect and return all results.
   If p never succeeds, return an empty result."
-  (defn helper [acc s]
-    (try
-      (let [[acc1 s1] (p s)]
-        (helper (into acc acc1) s1))
-      (catch java.lang.Exception e
-        [acc s])))
   (fn [s]
-    (helper [] s)))
+    (loop [[acc s] [[] s]]
+      (let [[acc1 s1] (try
+                        (p s)
+                        (catch java.lang.Exception e
+                          [nil s]))]
+        (if (nil? acc1)
+          [acc s]
+          (recur [(into acc acc1) s1]))))))
 
 
 (defn one-or-more [p]
