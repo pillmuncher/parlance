@@ -121,7 +121,7 @@
 
 (defn pop-chars [n]
   "Read the next n character tring and return it as parsing result.  Advance
-   input pointer by n."
+   input by n characters."
   (fn [s]
     [[(apply str (take n s))] (drop n s)]))
 
