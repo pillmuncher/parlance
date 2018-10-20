@@ -80,7 +80,7 @@
       (let [[acc1 s1] (try
                         (p s)
                         (catch java.lang.Exception e
-                          [nil s]))]
+                          [nil nil]))]
         (if (nil? acc1)
           [acc s]
           (recur [(into acc acc1) s1]))))))
