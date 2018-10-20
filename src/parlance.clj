@@ -1,4 +1,4 @@
-(ns parlance.core)  ;; namespace festlegen
+(ns parlance.core)
 
 
 (defn return [v]
