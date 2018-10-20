@@ -51,7 +51,7 @@
 
 
 (defn or-else[p1 p2]
-  "Invoke parsers p1 and p2 alternatively.  If p1 fails, apply p2 instead from
+  "Invoke parsers p1 and p2 alternatively.  If p1 fails, invoke p2 instead at
    the same point in input."
   (fn [s]
     (try
