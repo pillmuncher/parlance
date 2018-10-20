@@ -73,7 +73,7 @@
 
 
 (defn zero-or-more [p]
-  "Gather all parsing results of repeatedly applying parser p while consuming
+  "Gather all parsing results of repeatedly invoking parser p while consuming
    input.  If p never succeeds return an empty parsing result."
   (defn helper [acc s]
     (try
