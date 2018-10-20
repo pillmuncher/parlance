@@ -23,7 +23,7 @@
 
 (defn epsilon [s]
   "Recognize the end of the input string."
-  (if (= s "")
+  (if (empty? s)
     [[] ""]
     (throw (java.lang.Exception "trailing characters!"))))
 
