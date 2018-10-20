@@ -42,7 +42,7 @@
       [[] s1])))
 
 
-(defn and-then[p1 p2]
+(defn and-then [p1 p2]
   "Invoke parsers p1 and p2 in sequence.  p2 starts off where p1 stopped."
   (fn [s]
     (let [[r1 s1] (p1 s)
@@ -50,7 +50,7 @@
       [(into r1 r2) s2])))
 
 
-(defn or-else[p1 p2]
+(defn or-else [p1 p2]
   "Invoke parsers p1 and p2 alternatively.  If p1 fails, invoke p2 instead at
    the same point in input."
   (fn [s]
