@@ -16,7 +16,7 @@
       (p1 s1))))
 
 
-(defn empty [s]
+(defn epsilon[s]
   "Recognize an empty string."
     [[] s])
 
@@ -76,14 +76,14 @@
   "Invoke parser p repeatedly until failure. Collect and return all results.
   If p never succeeds, return an empty result."
   (fn [s]
-    (loop [[acc s] [[] s]]
+    (loop [acc [] s s]
       (let [[acc1 s1] (try
                         (p s)
                         (catch java.lang.Exception e
                           [nil nil]))]
         (if (nil? acc1)
           [acc s]
-          (recur [(into acc acc1) s1]))))))
+          (recur (into acc acc1) s1))))))
 
 
 (defn one-or-more [p]
@@ -94,7 +94,7 @@
 
 (defn zero-or-one [p]
   "Invoke parser p once, but ignore failure."
-  (or-else p empty))
+  (or-else p epsilon))
 
 
 (def opt zero-or-one)
