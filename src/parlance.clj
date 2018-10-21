@@ -25,7 +25,9 @@
   "Recognize the end of the input string."
   (if (empty? s)
     [[] ""]
-    (throw (java.lang.Exception "trailing characters!"))))
+    (throw (ex-info "trailing characters!"
+                    {:type :parsing-error
+                     :cause :trailing-characters}))))
 
 
 (defn action [f p]
@@ -56,8 +58,10 @@
   (fn [s]
     (try
       (p1 s)
-      (catch java.lang.Exception e
-        (p2 s)))))
+      (catch clojure.lang.ExceptionInfo e
+        (if (= :parsing-error (-> e ex-data :type))
+          (p2 s)
+          (throw e))))))
 
 
 (defn chain [px py & ps]
@@ -79,8 +83,10 @@
     (loop [acc [] s s]
       (let [[acc1 s1] (try
                         (p s)
-                        (catch java.lang.Exception e
-                          [nil nil]))]
+                        (catch clojure.lang.ExceptionInfo e
+                          (if (= :parsing-error (-> e ex-data :type))
+                            [nil ni]
+                            (throw e))))]
         (if (nil? acc1)
           [acc s]
           (recur (into acc acc1) s1))))))
@@ -106,8 +112,9 @@
     (if (= c (first s))
       [[(str c)] (rest s)]
       (throw
-        (java.lang.Exception
-          (format "expected %s, found %s!" c (first s)))))))
+        (ex-info (format "expected %s, found %s!" c (first s))
+                 {:type :parsing-error
+                  :cause :excpected-character-not-found})))))
 
 
 (defn word [cs]
