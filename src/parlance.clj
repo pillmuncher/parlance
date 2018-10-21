@@ -16,7 +16,7 @@
       (p1 s1))))
 
 
-(defn epsilon[s]
+(defn epsilon [s]
   "Recognize an empty string."
     [[] s])
 
