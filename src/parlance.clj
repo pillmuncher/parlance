@@ -1,4 +1,4 @@
-(ns parlance.core)
+(ns parlance)
 
 
 (defn return [v]
