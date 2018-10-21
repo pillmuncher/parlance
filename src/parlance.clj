@@ -59,8 +59,8 @@
     (try
       (p1 s)
       (catch clojure.lang.ExceptionInfo e
-        (if (= :parsing-error (-> e ex-data :type))
-          (p2 s)
+        (case (-> e ex-data :type)
+          :parsing-error (p2 s)
           (throw e))))))
 
 
@@ -84,8 +84,8 @@
       (let [[acc1 s1] (try
                         (p s)
                         (catch clojure.lang.ExceptionInfo e
-                          (if (= :parsing-error (-> e ex-data :type))
-                            [nil ni]
+                          (case (-> e ex-data :type)
+                            :parsing-error [nil nil]
                             (throw e))))]
         (if (nil? acc1)
           [acc s]
