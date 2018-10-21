@@ -119,7 +119,11 @@
 
 (defn word [cs]
   "Parse a consecutive word consisting of any characters in cs."
-  (action str (one-or-more (reduce or-else (map char cs)))))
+  (->> cs
+      (map char)
+      (reduce or-else)
+      (one-or-more)
+      (action str)))
 
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
