@@ -127,9 +127,15 @@
 
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
-(def digits (word "1234567890"))
-(def integer (and-then (opt (or-else (char \-) (char \+))) digits))
-(def decimal (action str (chain integer (char \.) digits)))
+
+
+(def positive-digit (->> "123456789" (map char) (reduce or-else)))
+(def digit (or-else positive-digit (char \0)))
+(def digits (action str (one-or-more digit)))
+(def positive-integer (action str (and-then positive-digit (opt digits))))
+(def opt-sign (opt (or-else (char \-) (char \+))))
+(def integer (action str (and-then opt-sign positive-integer)))
+(def decimal (action str (chain opt-sign integer (char \.) positive-integer)))
 
 
 (defn pop-chars [n]
@@ -139,7 +145,7 @@
     [[(apply str (take n s))] (drop n s)]))
 
 
-(def n-block (bind (action #(Integer/parseInt %) digits) pop-chars))
+(def n-block (bind (action #(Integer/parseInt %) positive-integer) pop-chars))
 (def n-blocks (one-or-more n-block))
 
 
