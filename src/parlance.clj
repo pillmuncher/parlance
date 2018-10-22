@@ -70,9 +70,9 @@
   (reduce and-then (and-then px py) ps))
 
 
-(defn alt [px py & ps]
+(defn choice [px py & ps]
   "Invoke parsers p...  alternatively at the same point in input, until one
-  returns a result.  This becomes the alt parsers result."
+  returns a result.  This becomes the choice parsers result."
   (reduce or-else (or-else px py) ps))
 
 
