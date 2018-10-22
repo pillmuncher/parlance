@@ -127,8 +127,9 @@
 
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
-(def integer (word "1234567890"))
-(def decimal (action str (chain integer (char \.) integer)))
+(def digits (word "1234567890"))
+(def integer (and-then (opt (or-else (char \-) (char \+))) digits))
+(def decimal (action str (chain integer (char \.) digits)))
 
 
 (defn pop-chars [n]
