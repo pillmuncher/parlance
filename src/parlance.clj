@@ -131,7 +131,7 @@
 
 (def positive-digit (->> "123456789" (map char) (reduce or-else)))
 (def digit (or-else positive-digit (char \0)))
-(def digits (action str (one-or-more digit)))
+(def digits (one-or-more digit))
 (def positive-integer (action str (and-then positive-digit (opt digits))))
 (def opt-sign (opt (or-else (char \-) (char \+))))
 (def integer (action str (and-then opt-sign positive-integer)))
