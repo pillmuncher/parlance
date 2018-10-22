@@ -129,6 +129,7 @@
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
 (def digits (word "1234567890"))
 (def integer (and-then (opt (or-else (char \-) (char \+))) digits))
+(def pos-integer (and-then (
 (def decimal (action str (chain integer (char \.) digits)))
 
 
@@ -139,7 +140,7 @@
     [[(apply str (take n s))] (drop n s)]))
 
 
-(def n-block (bind (action #(Integer/parseInt %) integer) pop-chars))
+(def n-block (bind (action #(Integer/parseInt %) digits) pop-chars))
 (def n-blocks (one-or-more n-block))
 
 
