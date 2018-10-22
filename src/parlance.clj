@@ -30,7 +30,7 @@
                      :cause :trailing-characters}))))
 
 
-(defn map* [f p]
+(defn fmap* [f p]
   "Transform the result of parser p by applying function f."
   (fn [s]
     (let [[r s1] (p s)]
@@ -123,7 +123,7 @@
       (map char)
       (reduce or-else)
       (one-or-more)
-      (map* str)))
+      (fmap* str)))
 
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
@@ -132,10 +132,10 @@
 (def positive-digit (->> "123456789" (map char) (apply choice)))
 (def digit (or-else positive-digit (char \0)))
 (def digits (one-or-more digit))
-(def positive-integer (map* str (and-then positive-digit (opt digits))))
+(def positive-integer (fmap* str (and-then positive-digit (opt digits))))
 (def opt-sign (opt (or-else (char \-) (char \+))))
-(def integer (map* str (and-then opt-sign positive-integer)))
-(def decimal (map* str (chain opt-sign integer (char \.) positive-integer)))
+(def integer (fmap* str (and-then opt-sign positive-integer)))
+(def decimal (fmap* str (chain opt-sign integer (char \.) positive-integer)))
 
 
 (defn pop-chars [n]
@@ -145,7 +145,7 @@
     [[(apply str (take n s))] (drop n s)]))
 
 
-(def n-block (bind (map* #(Integer/parseInt %) positive-integer) pop-chars))
+(def n-block (bind (fmap* #(Integer/parseInt %) positive-integer) pop-chars))
 (def n-blocks (one-or-more n-block))
 
 
