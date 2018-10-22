@@ -129,10 +129,10 @@
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
 
 
-(def positive-digit (->> "123456789" (map char) (reduce or-else)))
+(def positive-digit (->> "123456789" (map char) (apply choice)))
 (def digit (or-else positive-digit (char \0)))
 (def digits (one-or-more digit))
-(def positive-integer (map* str (and-then positive-digit (opt digits)))
+(def positive-integer (map* str (and-then positive-digit (opt digits))))
 (def opt-sign (opt (or-else (char \-) (char \+))))
 (def integer (map* str (and-then opt-sign positive-integer)))
 (def decimal (map* str (chain opt-sign integer (char \.) positive-integer)))
