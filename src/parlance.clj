@@ -1,6 +1,13 @@
 (ns parlance)
 
 
+(defn fmap [f p]
+  "Transform the result of parser p by applying function f."
+  (fn [s]
+    (let [[r s1] (p s)]
+      [(f r) s1])))
+
+
 (defn fmap* [f p]
   "Transform the result of parser p by applying function f."
   (fn [s]
@@ -12,11 +19,25 @@
   "Determine the parser to be invoked next by calling function f on the result
   of parser p (i.e. f must return a parser)."
   (fn [s]
+    (let [[[p1] s1] ((fmap f p) s)]
+      (p1 s1))))
+
+
+(defn bind* [p f]
+  "Determine the parser to be invoked next by calling function f on the result
+  of parser p (i.e. f must return a parser)."
+  (fn [s]
     (let [[[p1] s1] ((fmap* f p) s)]
       (p1 s1))))
 
 
 (defn return [v]
+  "Make value v the result.  Don't consume any input."
+  (fn [s]
+    [v s]))
+
+
+(defn return* [v]
   "Make value v the result.  Don't consume any input."
   (fn [s]
     [[v] s]))
@@ -144,7 +165,7 @@
     [[(apply str (take n s))] (drop n s)]))
 
 
-(def n-block (bind (fmap* #(Integer/parseInt %) positive-integer) pop-chars))
+(def n-block (bind* (fmap* #(Integer/parseInt %) positive-integer) pop-chars))
 (def n-blocks (one-or-more n-block))
 
 
