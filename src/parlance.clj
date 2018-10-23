@@ -8,18 +8,18 @@
       [[(apply f r)] s1])))
 
 
-(defn return [v]
-  "Make value v the result.  Don't consume any input."
-  (fn [s]
-    [[v] s]))
-
-
 (defn bind [p f]
   "Determine the parser to be invoked next by calling function f on the result
   of parser p (i.e. f must return a parser)."
   (fn [s]
     (let [[[p1] s1] ((fmap* f p) s)]
       (p1 s1))))
+
+
+(defn return [v]
+  "Make value v the result.  Don't consume any input."
+  (fn [s]
+    [[v] s]))
 
 
 (defn epsilon [s]
