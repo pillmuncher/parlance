@@ -24,7 +24,7 @@
 
 (defn epsilon [s]
   "Recognize an empty string."
-  [[] s])
+  [[""] s])
 
 
 (defn eoi [s]
