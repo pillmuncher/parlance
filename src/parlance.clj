@@ -115,9 +115,8 @@
                        :cause :excpected-character-not-found})))))
 
 
-(def str-join (partial apply str))
-(def parse-int #(Integer/parseInt %))
-(def unlist (juxt (comp first first) second))
+(def join (partial fmap (partial (comp vector (partial apply str)))))
+
 
 (defn word [cs]
   "Parse a consecutive word consisting of any characters in cs."
@@ -125,7 +124,7 @@
        (map char)
        (reduce or-else)
        (one-or-more)
-       (fmap str-join)))
+       (join)))
 
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
@@ -133,21 +132,22 @@
 
 (def positive-digit (->> "123456789" (map char) (apply choice)))
 (def digit (or-else positive-digit (char \0)))
-(def digits (one-or-more digit))
-(def positive-integer (fmap str-join (and-then positive-digit (opt digits))))
+(def digits (join (one-or-more digit)))
+(def positive-integer (join (and-then positive-digit (opt digits))))
 (def non-negative-integer (or-else (char \0) positive-integer))
 (def opt-sign (opt (or-else (char \-) (char \+))))
-(def integer (fmap str-join (and-then opt-sign non-negative-integer)))
-(def decimal (fmap str-join (chain opt-sign integer (char \.) digits)))
+(def integer (join (and-then opt-sign non-negative-integer)))
+(def decimal (join (and-then integer (opt (and-then (char \.) digits)))))
 
 
 (defn pop-chars [n]
   "Read the next n characters and return them as result, joined into a single
   string."
   (fn [s]
-    [[(str-join (take n s))] (drop n s)]))
+    [[(apply str (take n s))] (drop n s)]))
 
 
+(def parse-int (comp #(Integer/parseInt %) first))
 
 (def n-block (bind (fmap parse-int positive-integer) pop-chars))
 (def n-blocks (one-or-more n-block))
