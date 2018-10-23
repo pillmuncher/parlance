@@ -134,7 +134,7 @@
 (def positive-integer (fmap* str (and-then positive-digit (opt digits))))
 (def non-negative-integer (or-else (char \0) positive-integer))
 (def opt-sign (opt (or-else (char \-) (char \+))))
-(def integer (fmap* str (and-then opt-sign non-negative-integer))
+(def integer (fmap* str (and-then opt-sign non-negative-integer)))
 (def decimal (fmap* str (chain opt-sign integer (char \.) digits)))
 
 
