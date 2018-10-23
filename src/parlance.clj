@@ -18,7 +18,7 @@
 
 (defn epsilon [s]
   "Recognize an empty string."
-    [[] s])
+  [[] s])
 
 
 (defn eoi [s]
@@ -111,19 +111,18 @@
   (fn [s]
     (if (= c (first s))
       [[(str c)] (rest s)]
-      (throw
-        (ex-info (format "expected %s, found %s!" c (first s))
-                 {:type :parsing-error
-                  :cause :excpected-character-not-found})))))
+      (throw (ex-info (format "expected %s, found %s!" c (first s))
+                      {:type :parsing-error
+                       :cause :excpected-character-not-found})))))
 
 
 (defn word [cs]
   "Parse a consecutive word consisting of any characters in cs."
   (->> cs
-      (map char)
-      (reduce or-else)
-      (one-or-more)
-      (fmap* str)))
+       (map char)
+       (reduce or-else)
+       (one-or-more)
+       (fmap* str)))
 
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
