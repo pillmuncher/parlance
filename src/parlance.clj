@@ -9,7 +9,7 @@
 
 (defn bind [p f]
   "Determine the parser to be invoked next by calling function f on the result
-  of parser p (i.e. f must return a parser)."
+  of parser p (i.e.  f must return a parser)."
   (fn [s]
     (let [[r1 s1] (p s)
           p1 (apply f r1)]
@@ -65,19 +65,19 @@
 
 
 (defn chain [px py & ps]
-  "Invoke parsers p...  in sequence.  Each one starts off where the previous
+  "Invoke parsers p... in sequence.  Each one starts off where the previous
   one stopped."
   (reduce and-then (and-then px py) ps))
 
 
 (defn choice [px py & ps]
-  "Invoke parsers p...  alternatively at the same point in input, until one
+  "Invoke parsers p... alternatively at the same point in input, until one
   returns a result.  This becomes the choice parsers result."
   (reduce or-else (or-else px py) ps))
 
 
 (defn zero-or-more [p]
-  "Invoke parser p repeatedly until failure. Collect and return all results.
+  "Invoke parser p repeatedly until failure.  Collect and return all results.
   If p never succeeds, return an empty result."
   (fn [s]
     (loop [acc [] s s]
@@ -93,7 +93,7 @@
 
 
 (defn one-or-more [p]
-  "Invoke parser p repeatedly until failure. Collect and return all results.
+  "Invoke parser p repeatedly until failure.  Collect and return all results.
   If p never succeeds, fail."
   (and-then p (zero-or-more p)))
 
