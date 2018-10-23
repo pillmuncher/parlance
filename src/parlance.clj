@@ -115,7 +115,7 @@
                        :cause :excpected-character-not-found})))))
 
 
-(def join (partial fmap (partial (comp vector (partial apply str)))))
+(def join (partial fmap #(->> % (apply str) (vector))))
 
 
 (defn word [cs]
