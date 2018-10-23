@@ -1,25 +1,25 @@
 (ns parlance)
 
 
-(defn fmap* [f p]
+(defn fmap [f p]
   "Transform the result of parser p by applying function f."
   (fn [s]
     (let [[r s1] (p s)]
-      [[(apply f r)] s1])))
+      [(f r) s1])))
 
 
 (defn bind [p f]
   "Determine the parser to be invoked next by calling function f on the result
   of parser p (i.e. f must return a parser)."
   (fn [s]
-    (let [[[p1] s1] ((fmap* f p) s)]
+    (let [[p1 s1] ((fmap f p) s)]
       (p1 s1))))
 
 
 (defn return [v]
   "Make value v the result.  Don't consume any input."
   (fn [s]
-    [[v] s]))
+    [v s]))
 
 
 (defn epsilon [s]
@@ -115,13 +115,17 @@
                        :cause :excpected-character-not-found})))))
 
 
+(def str-join (partial apply str))
+(def parse-int #(Integer/parseInt %))
+(def unlist (juxt (comp first first) second))
+
 (defn word [cs]
   "Parse a consecutive word consisting of any characters in cs."
   (->> cs
        (map char)
        (reduce or-else)
        (one-or-more)
-       (fmap* str)))
+       (fmap str-join)))
 
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
@@ -130,21 +134,22 @@
 (def positive-digit (->> "123456789" (map char) (apply choice)))
 (def digit (or-else positive-digit (char \0)))
 (def digits (one-or-more digit))
-(def positive-integer (fmap* str (and-then positive-digit (opt digits))))
+(def positive-integer (fmap str-join (and-then positive-digit (opt digits))))
 (def non-negative-integer (or-else (char \0) positive-integer))
 (def opt-sign (opt (or-else (char \-) (char \+))))
-(def integer (fmap* str (and-then opt-sign non-negative-integer)))
-(def decimal (fmap* str (chain opt-sign integer (char \.) digits)))
+(def integer (fmap str-join (and-then opt-sign non-negative-integer)))
+(def decimal (fmap str-join (chain opt-sign integer (char \.) digits)))
 
 
 (defn pop-chars [n]
   "Read the next n characters and return them as result, joined into a single
   string."
   (fn [s]
-    [[(apply str (take n s))] (drop n s)]))
+    [[(str-join (take n s))] (drop n s)]))
 
 
-(def n-block (bind (fmap* #(Integer/parseInt %) positive-integer) pop-chars))
+
+(def n-block (bind (fmap parse-int positive-integer) pop-chars))
 (def n-blocks (one-or-more n-block))
 
 
