@@ -1,6 +1,13 @@
 (ns parlance)
 
 
+(defn fmap* [f p]
+  "Transform the result of parser p by applying function f."
+  (fn [s]
+    (let [[r s1] (p s)]
+      [[(apply f r)] s1])))
+
+
 (defn return [v]
   "Make value v the result.  Don't consume any input."
   (fn [s]
@@ -11,8 +18,7 @@
   "Determine the parser to be invoked next by calling function f on the result
   of parser p (i.e. f must return a parser)."
   (fn [s]
-    (let [[r1 s1] (p s)
-          p1 (apply f r1)]
+    (let [[[p1] s1] ((fmap* f p) s)]
       (p1 s1))))
 
 
@@ -28,13 +34,6 @@
     (throw (ex-info "trailing characters!"
                     {:type :parsing-error
                      :cause :trailing-characters}))))
-
-
-(defn fmap* [f p]
-  "Transform the result of parser p by applying function f."
-  (fn [s]
-    (let [[r s1] (p s)]
-      [[(apply f r)] s1])))
 
 
 (defn ignore [p]
