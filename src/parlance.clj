@@ -127,10 +127,7 @@
 
 (defn word [cs]
   "Parse a consecutive word consisting of any characters in cs."
-  (->> cs
-       (char)
-       (one-or-more)
-       (join)))
+  (->> cs (char) (one-or-more) (join)))
 
 
 (def space (char " "))
