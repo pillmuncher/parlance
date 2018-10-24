@@ -109,6 +109,12 @@
 (def opt zero-or-one)
 
 
+(defn join [p]
+  "Invoke parser p and join its result (a vector of strings) into a single
+  string, wrapped in a vector."
+  (fmap #(->> % clojure.string/join vector) p))
+
+
 (defn char [cs]
   "Parse any of the characters in cs."
   (let [cs (set cs)]
@@ -119,15 +125,10 @@
                         {:type :parsing-error
                          :cause :excpected-character-not-found}))))))
 
-(defn join [p]
-  "Invoke parser p and join its result (a vector of strings) into a single
-  string, wrapped in a vector."
-  (fmap #(->> % (clojure.string/join) (vector)) p))
-
-
-(defn word [cs]
-  "Parse a consecutive word consisting of any characters in cs."
-  (->> cs (char) (one-or-more) (join)))
+(def word
+  "Parse a consecutive word consisting of any of the characters in the
+  argument.  The argument must be a single, non-empty string"
+  (comp join one-or-more char))
 
 
 (def space (char " "))
