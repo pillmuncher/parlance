@@ -151,8 +151,9 @@
 
 
 (def parse-int #(->> % (first) (Integer/parseInt)))
+(def read-int (fmap parse-int positive-integer))
 
-(def n-block (bind (fmap parse-int positive-integer) pop-chars))
+(def n-block (bind read-int pop-chars))
 (def n-blocks (one-or-more n-block))
 
 
