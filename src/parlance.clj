@@ -119,11 +119,6 @@
                       {:type :parsing-error
                        :cause :excpected-character-not-found}))))))
 
-(def lower-char (char "abcdefghijklmnopqrstuvwxyz"))
-(def upper-char (char "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-(def any-char (or-else lower-char upper-char))
-
-
 (defn join [p]
   "Invoke parser p and join its result (a vector of strings) into a single
   string, wrapped in a vector."
@@ -138,10 +133,14 @@
        (join)))
 
 
-(def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
-(def upper-word (word "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-(def capitalized (join (and-then upper-char (opt lower-word))))
-
+(def space (char " "))
+(def tab (char "\t"))
+(def nl (char "\n"))
+(def spaces (word " "))
+(def tabs (word "\t"))
+(def nls (word "\n"))
+(def ws (word " \t\n"))
+(def opt-ws (opt ws))
 
 (def positive-digit (char "123456789"))
 (def digit (char "1234567890"))
@@ -152,19 +151,15 @@
 (def integer (join (and-then opt-sign non-negative-integer)))
 (def decimal (join (and-then integer (opt (and-then (char ".") digits)))))
 
+(def lower-char (char "abcdefghijklmnopqrstuvwxyz"))
+(def upper-char (char "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+(def letter (or-else lower-char upper-char))
+(def alphanumeric (choice lower-char upper-char digit))
 
-(def identifier (join (and-then any-char
-                                (zero-or-more (choice any-char
-                                                      digit)))))
-
-(def space (char " "))
-(def tab (char "\t"))
-(def nl (char "\n"))
-(def spaces (word " "))
-(def tabs (word "\t"))
-(def nls (word "\n"))
-(def ws (word " \t\n"))
-(def opt-ws (opt ws))
+(def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
+(def upper-word (word "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+(def capitalized (join (and-then upper-char (opt lower-word))))
+(def identifier (join (and-then letter (zero-or-more alphanumeric))))
 
 
 (defn pop-chars [n]
