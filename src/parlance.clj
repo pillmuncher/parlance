@@ -115,7 +115,10 @@
                        :cause :excpected-character-not-found})))))
 
 
-(def join (partial fmap #(->> % (clojure.string/join) (vector))))
+(defn join [p]
+  "Invoke parser p and join its result (a vector of strings) into a single
+  string, wrapped in a vector."
+  (fmap #(->> % (clojure.string/join) (vector)) p))
 
 
 (defn word [cs]
