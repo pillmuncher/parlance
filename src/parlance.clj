@@ -104,14 +104,19 @@
 (def opt zero-or-one)
 
 
-(defn char [c]
-  "Parse the character c."
+(defn char [cs]
+  "Parse any of the characters in cs."
+  (let [cs (set cs)]
   (fn [s]
-    (if (= c (first s))
-      [[(str c)] (rest s)]
-      (throw (ex-info (format "expected %s, found %s!" c (first s))
+    (if (contains? cs (first s))
+      [[(str (first s))] (rest s)]
+      (throw (ex-info (format "expected any of %s, found %s!" cs (first s))
                       {:type :parsing-error
-                       :cause :excpected-character-not-found})))))
+                       :cause :excpected-character-not-found}))))))
+
+(def lower-char (char "abcdefghijklmnopqrstuvwxyz"))
+(def upper-char (char "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+(def any-char (or-else lower-char upper-char))
 
 
 (defn join [p]
@@ -123,23 +128,29 @@
 (defn word [cs]
   "Parse a consecutive word consisting of any characters in cs."
   (->> cs
-       (map char)
-       (reduce or-else)
+       (char)
        (one-or-more)
        (join)))
 
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
+(def upper-word (word "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+(def capitalized (join (and-then upper-char (opt lower-word))))
 
 
-(def positive-digit (->> "123456789" (map char) (apply choice)))
-(def digit (or-else positive-digit (char \0)))
+(def positive-digit (char "123456789"))
+(def digit (char "1234567890"))
 (def digits (join (one-or-more digit)))
 (def positive-integer (join (and-then positive-digit (opt digits))))
-(def non-negative-integer (or-else (char \0) positive-integer))
-(def opt-sign (opt (or-else (char \-) (char \+))))
+(def non-negative-integer (or-else (char "0") positive-integer))
+(def opt-sign (opt (char "-+")))
 (def integer (join (and-then opt-sign non-negative-integer)))
-(def decimal (join (and-then integer (opt (and-then (char \.) digits)))))
+(def decimal (join (and-then integer (opt (and-then (char ".") digits)))))
+
+
+(def identifier (join (and-then any-char
+                                (zero-or-more (choice any-char
+                                                      digit)))))
 
 
 (defn pop-chars [n]
@@ -161,4 +172,4 @@
 
 
 (n-blocks "5hallo7ingbertrest")
-;;  Ergebnis:  [["hallo" "ingbert"] (\r \e \s \t)]
+;;  Ergebnis:  [["hallo" "ingbert"] ("r" "e" "s" "t")]
