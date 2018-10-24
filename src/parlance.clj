@@ -27,6 +27,11 @@
   [[""] s])
 
 
+(defn nothing [s]
+  "Return an empty result."
+  [[] s])
+
+
 (defn eoi [s]
   "Recognize the end of the input string."
   (if (empty? s)
@@ -98,7 +103,7 @@
 
 (defn zero-or-one [p]
   "Invoke parser p once, but ignore failure."
-  (or-else p epsilon))
+  (or-else p nothing))
 
 
 (def opt zero-or-one)
@@ -151,6 +156,12 @@
 (def identifier (join (and-then any-char
                                 (zero-or-more (choice any-char
                                                       digit)))))
+
+(def space (char " "))
+(def tab (char "\t"))
+(def nl (char "\n"))
+(def ws (join one-or-more (char " \t\n")))
+(def opt-ws (opt (join (one-or-more (char " \t\n")))))
 
 
 (defn pop-chars [n]
