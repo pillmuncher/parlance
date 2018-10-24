@@ -160,7 +160,10 @@
 (def space (char " "))
 (def tab (char "\t"))
 (def nl (char "\n"))
-(def ws (join one-or-more (char " \t\n")))
+(def spaces (join (one-or-more (char " "))))
+(def tabs (join (one-or-more (char "\t"))))
+(def nls (join one-or-more (char "\n")))
+(def ws (join (one-or-more (char " \t\n"))))
 (def opt-ws (opt (join (one-or-more (char " \t\n")))))
 
 
