@@ -150,7 +150,11 @@
     [[(clojure.string/join (take n s))] (drop n s)]))
 
 
-(def parse-int #(->> % (first) (Integer/parseInt)))
+(defn parse-int [[s]]
+  "Parse the string in the vector into an integer."
+  (Integer/parseInt s))
+
+
 (def read-int (fmap parse-int positive-integer))
 
 (def n-block (bind read-int pop-chars))
