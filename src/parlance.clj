@@ -112,12 +112,12 @@
 (defn char [cs]
   "Parse any of the characters in cs."
   (let [cs (set cs)]
-  (fn [s]
-    (if (contains? cs (first s))
-      [[(str (first s))] (rest s)]
-      (throw (ex-info (format "expected any of %s, found %s!" cs (first s))
-                      {:type :parsing-error
-                       :cause :excpected-character-not-found}))))))
+    (fn [s]
+      (if (contains? cs (first s))
+        [[(str (first s))] (rest s)]
+        (throw (ex-info (format "expected any of %s, found %s!" cs (first s))
+                        {:type :parsing-error
+                         :cause :excpected-character-not-found}))))))
 
 (defn join [p]
   "Invoke parser p and join its result (a vector of strings) into a single
