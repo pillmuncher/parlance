@@ -115,7 +115,7 @@
                        :cause :excpected-character-not-found})))))
 
 
-(def join (partial fmap #(->> % (apply str) (vector))))
+(def join (partial fmap #(->> % (clojure.string/join) (vector))))
 
 
 (defn word [cs]
@@ -144,7 +144,7 @@
   "Read the next n characters and return them as result, joined into a single
   string."
   (fn [s]
-    [[(apply str (take n s))] (drop n s)]))
+    [[(clojure.string/join (take n s))] (drop n s)]))
 
 
 (def parse-int #(->> % (first) (Integer/parseInt)))
