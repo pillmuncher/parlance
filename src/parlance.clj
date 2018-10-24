@@ -145,21 +145,21 @@
 (def positive-digit (char "123456789"))
 (def digit (char "1234567890"))
 (def digits (join (one-or-more digit)))
-(def positive-integer (join (and-then positive-digit (opt digits))))
-(def non-negative-integer (or-else (char "0") positive-integer))
+(def positive-integer (join (chain positive-digit (opt digits))))
+(def non-negative-integer (choice (char "0") positive-integer))
 (def opt-sign (opt (char "-+")))
-(def integer (join (and-then opt-sign non-negative-integer)))
-(def decimal (join (and-then integer (opt (and-then (char ".") digits)))))
+(def integer (join (chain opt-sign non-negative-integer)))
+(def decimal (join (chain integer (opt (chain (char ".") digits)))))
 
 (def lower-char (char "abcdefghijklmnopqrstuvwxyz"))
 (def upper-char (char "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-(def letter (or-else lower-char upper-char))
+(def letter (choice lower-char upper-char))
 (def alphanumeric (choice lower-char upper-char digit))
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
 (def upper-word (word "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-(def capitalized (join (and-then upper-char (opt lower-word))))
-(def identifier (join (and-then letter (zero-or-more alphanumeric))))
+(def capitalized (join (chain upper-char (opt lower-word))))
+(def identifier (join (chain letter (zero-or-more alphanumeric))))
 
 
 (defn pop-chars [n]
