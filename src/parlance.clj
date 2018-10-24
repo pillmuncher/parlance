@@ -113,6 +113,17 @@
                       {:type :parsing-error
                        :cause :excpected-character-not-found})))))
 
+(defn char-of [cs]
+  "Parse a any character in cs."
+  (->> cs
+       (map char)
+       (reduce or-else)))
+
+
+(def lower-char (char-of "abcdefghijklmnopqrstuvwxyz"))
+(def upper-char (char-of "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+(def any-char (or-else lower-char upper-char))
+
 
 (defn join [p]
   "Invoke parser p and join its result (a vector of strings) into a single
@@ -123,13 +134,14 @@
 (defn word [cs]
   "Parse a consecutive word consisting of any characters in cs."
   (->> cs
-       (map char)
-       (reduce or-else)
+       (char-of)
        (one-or-more)
        (join)))
 
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
+(def upper-word (word "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
+(def capitalized (join (and-then upper-char (opt lower-word))))
 
 
 (def positive-digit (->> "123456789" (map char) (apply choice)))
@@ -140,6 +152,12 @@
 (def opt-sign (opt (or-else (char \-) (char \+))))
 (def integer (join (and-then opt-sign non-negative-integer)))
 (def decimal (join (and-then integer (opt (and-then (char \.) digits)))))
+
+
+(def identifier (join (and-then (or-else lower-char upper-char)
+                                (zero-or-more (choice lower-word
+                                                      upper-word
+                                                      digits)))))
 
 
 (defn pop-chars [n]
