@@ -147,7 +147,7 @@
     [[(apply str (take n s))] (drop n s)]))
 
 
-(def parse-int (comp #(Integer/parseInt %) first))
+(def parse-int #(->> % (first) (Integer/parseInt)))
 
 (def n-block (bind (fmap parse-int positive-integer) pop-chars))
 (def n-blocks (one-or-more n-block))
