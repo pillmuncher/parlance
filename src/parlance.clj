@@ -55,12 +55,11 @@
   "Invoke parsers p1 and p2 alternatively.  If p1 fails, invoke p2 instead at
   the same point in input."
   (fn [s]
-    (try
-      (p1 s)
-      (catch clojure.lang.ExceptionInfo e
-        (case (-> e ex-data :type)
-          :parsing-error (p2 s)
-          (throw e))))))
+    (try (p1 s)
+         (catch clojure.lang.ExceptionInfo e
+           (case (-> e ex-data :type)
+             :parsing-error (p2 s)
+             (throw e))))))
 
 
 (defn chain [px py & ps]
@@ -79,13 +78,13 @@
   "Invoke parser p repeatedly until failure.  Collect and return all results.
   If p never succeeds, return an empty result."
   (fn [s]
-    (loop [acc [] s s]
-      (let [[acc1 s1] (try
-                        (p s)
-                        (catch clojure.lang.ExceptionInfo e
-                          (case (-> e ex-data :type)
-                            :parsing-error [nil nil]
-                            (throw e))))]
+    (loop [acc []
+           s s]
+      (let [[acc1 s1] (try (p s)
+                           (catch clojure.lang.ExceptionInfo e
+                             (case (-> e ex-data :type)
+                               :parsing-error [nil nil]
+                               (throw e))))]
         (if (nil? acc1)
           [acc s]
           (recur (into acc acc1) s1))))))
