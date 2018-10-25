@@ -22,14 +22,14 @@
     [v s]))
 
 
-(def epsilon
-  "Recognize an empty string."
-  (return [""]))
-
-
 (def nothing
   "Return an empty result."
   (return []))
+
+
+(def epsilon
+  "Recognize an empty string."
+  (return [""]))
 
 
 (defn eoi [s]
@@ -39,11 +39,6 @@
     (throw (ex-info "trailing characters!"
                     {:type :parsing-error
                      :cause :trailing-characters}))))
-
-
-(def ignore
-  "Invoke a parser but ignore its result."
-  (partial fmap (constantly [])))
 
 
 (defn and-then [p1 p2]
