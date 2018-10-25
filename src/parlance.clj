@@ -22,14 +22,14 @@
     [v s]))
 
 
-(defn epsilon [s]
+(def epsilon
   "Recognize an empty string."
-  [[""] s])
+  (return [""]))
 
 
-(defn nothing [s]
+(def nothing
   "Return an empty result."
-  [[] s])
+  (return []))
 
 
 (defn eoi [s]
@@ -41,11 +41,9 @@
                      :cause :trailing-characters}))))
 
 
-(defn ignore [p]
-  "Invoke parser p but ignore its result."
-  (fn [s]
-    (let [[r s1] (p s)]
-      [[] s1])))
+(def ignore
+  "Invoke a parser but ignore its result."
+  (partial fmap (constantly [])))
 
 
 (defn and-then [p1 p2]
@@ -112,7 +110,7 @@
 (defn join [p]
   "Invoke parser p and join its result (a vector of strings) into a single
   string, wrapped in a vector."
-  (fmap #(->> % clojure.string/join vector) p))
+  (fmap (comp vector clojure.string/join) p))
 
 
 (defn char [cs]
