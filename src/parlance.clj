@@ -1,23 +1,26 @@
 (ns parlance)
 
 
-(defn fmap [f p]
+(defn fmap
   "Transform the result of parser p by applying function f."
+  [f p]
   (fn [s]
     (let [[r s1] (p s)]
       [(f r) s1])))
 
 
-(defn bind [p f]
+(defn bind
   "Determine the parser to be invoked next by calling function f on the result
   of parser p (i.e. f must return a parser)."
+  [p f]
   (fn [s]
     (let [[p1 s1] ((fmap f p) s)]
       (p1 s1))))
 
 
-(defn return [v]
+(defn return
   "Make value v the result.  Don't consume any input."
+  [v]
   (fn [s]
     [v s]))
 
@@ -32,8 +35,9 @@
   (return [""]))
 
 
-(defn eoi [s]
+(defn eoi
   "Recognize the end of the input string."
+  [s]
   (if (empty? s)
     [[] ""]
     (throw (ex-info "trailing characters!"
@@ -41,17 +45,19 @@
                      :cause :trailing-characters}))))
 
 
-(defn and-then [p1 p2]
+(defn and-then
   "Invoke parsers p1 and p2 in sequence.  p2 starts off where p1 stopped."
+  [p1 p2]
   (fn [s]
     (let [[r1 s1] (p1 s)
           [r2 s2] (p2 s1)]
       [(into r1 r2) s2])))
 
 
-(defn or-else [p1 p2]
+(defn or-else
   "Invoke parsers p1 and p2 alternatively.  If p1 fails, invoke p2 instead at
   the same point in input."
+  [p1 p2]
   (fn [s]
     (try (p1 s)
          (catch clojure.lang.ExceptionInfo e
@@ -60,21 +66,24 @@
              (throw e))))))
 
 
-(defn chain [px py & ps]
+(defn chain
   "Invoke parsers p... in sequence.  Each one starts off where the previous
   one stopped."
+  [px py & ps]
   (reduce and-then (and-then px py) ps))
 
 
-(defn choice [px py & ps]
+(defn choice
   "Invoke parsers p... alternatively at the same point in input, until one
   returns a result.  This becomes the choice parsers result."
+  [px py & ps]
   (reduce or-else (or-else px py) ps))
 
 
-(defn zero-or-more [p]
+(defn zero-or-more
   "Invoke parser p repeatedly until failure.  Collect and return all results.
   If p never succeeds, return an empty result."
+  [p]
   (fn [s]
     (loop [acc []
            s s]
@@ -88,28 +97,32 @@
           (recur (into acc acc1) s1))))))
 
 
-(defn one-or-more [p]
+(defn one-or-more
   "Invoke parser p repeatedly until failure.  Collect and return all results.
   If p never succeeds, fail."
+  [p]
   (and-then p (zero-or-more p)))
 
 
-(defn zero-or-one [p]
+(defn zero-or-one
   "Invoke parser p once, but ignore failure."
+  [p]
   (or-else p nothing))
 
 
 (def opt zero-or-one)
 
 
-(defn join [p]
+(defn join
   "Invoke parser p and join its result (a vector of strings) into a vector
   containing a single string."
+  [p]
   (fmap (comp vector clojure.string/join) p))
 
 
-(defn char [cs]
+(defn char
   "Parse any of the characters in cs."
+  [cs]
   (let [cs (set cs)]
     (fn [s]
       (if (contains? cs (first s))
@@ -153,15 +166,17 @@
 (def identifier (join (chain letter (zero-or-more alphanumeric))))
 
 
-(defn pop-chars [n]
+(defn pop-chars
   "Read the next n characters and return them as result, joined into a single
   string."
+  [n]
   (fn [s]
     [[(clojure.string/join (take n s))] (drop n s)]))
 
 
-(defn parse-int [[s]]
+(defn parse-int
   "Parse the string in the vector into an integer."
+  [[s]]
   (Integer/parseInt s))
 
 
