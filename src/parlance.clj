@@ -103,8 +103,8 @@
 
 
 (defn join [p]
-  "Invoke parser p and join its result (a vector of strings) into a single
-  string, wrapped in a vector."
+  "Invoke parser p and join its result (a vector of strings) into a vector
+  containing a single string."
   (fmap (comp vector clojure.string/join) p))
 
 
