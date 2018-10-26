@@ -164,8 +164,8 @@
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
 (def upper-word (word "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-(def alpha-word (choice lower-word upper-word))
-(def alphanum-word (choice lower-word upper-word digit))
+(def alpha-word (one-or-more alpha-char))
+(def alphanum-word (one-or-more alphanum-char))
 
 (def capitalized (join (chain upper-char (opt lower-word))))
 (def identifier (join (chain alpha-char (opt alphanum-word))))
