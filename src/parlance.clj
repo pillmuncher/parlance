@@ -121,15 +121,17 @@
 
 
 (defn char
-  "Parse any of the characters in cs."
+  "Parse one character, if it occurs in cs."
   [cs]
-  (let [cs (set cs)]
+  (let [cset (set cs)]
     (fn [s]
-      (if (contains? cs (first s))
-        [[(str (first s))] (rest s)]
-        (throw (ex-info (format "expected any of %s, found %s!" cs (first s))
-                        {:type :parsing-error
-                         :cause :excpected-character-not-found}))))))
+      (let [c (first s)]
+        (if (contains? cset c)
+          [[(str c)] (rest s)]
+          (throw (ex-info (format "expected any of \"%s\", found %s!" cs c)
+                          {:type :parsing-error
+                           :cause :excpected-character-not-found})))))))
+
 
 (def word
   "Parse a consecutive word consisting of any of the characters in the
