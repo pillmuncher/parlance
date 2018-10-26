@@ -121,7 +121,7 @@
 
 
 (defn char
-  "Parse one character, if it occurs in cs."
+  "Parse a single character, if it occurs in cs."
   [cs]
   (let [cset (set cs)]
     (fn [s]
