@@ -188,6 +188,6 @@
 (def n-block (bind (fmap parse-int positive-integer) pop-chars))
 (def n-blocks (one-or-more n-block))
 
-
-(n-blocks "5hallo7ingbertrest")
+(defn -main []
+  (pr (n-blocks "5hallo7ingbertrest")))
 ;;  Ergebnis:  [["hallo" "ingbert"] ("r" "e" "s" "t")]
