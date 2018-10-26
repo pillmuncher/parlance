@@ -128,7 +128,7 @@
       (let [c (first s)]
         (if (contains? cset c)
           [[(str c)] (rest s)]
-          (throw (ex-info (format "expected any of \"%s\", found %s!" cs c)
+          (throw (ex-info (format "expected any of \"%s\", found \\%s." cs c)
                           {:type :parsing-error
                            :cause :excpected-character-not-found})))))))
 
