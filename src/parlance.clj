@@ -159,13 +159,13 @@
 
 (def lower-char (char "abcdefghijklmnopqrstuvwxyz"))
 (def upper-char (char "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
-(def letter (choice lower-char upper-char))
+(def alpha (choice lower-char upper-char))
 (def alphanumeric (choice lower-char upper-char digit))
 
 (def lower-word (word "abcdefghijklmnopqrstuvwxyz"))
 (def upper-word (word "ABCDEFGHIJKLMNOPQRSTUVWXYZ"))
 (def capitalized (join (chain upper-char (opt lower-word))))
-(def identifier (join (chain letter (zero-or-more alphanumeric))))
+(def identifier (join (chain alpha (zero-or-more alphanumeric))))
 
 
 (defn pop-chars
